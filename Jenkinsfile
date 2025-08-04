@@ -35,6 +35,7 @@ pipeline {
                     test -f build/index.html || (echo "Build failed, index.html not found!" && exit 1)
                     cd build
                     npm test
+                    cd ..
                     mkdir jest-results
                     cp -r test-results/junit.xml jest-results/
                     echo "Tests completed successfully, results stored in jest-results directory."
