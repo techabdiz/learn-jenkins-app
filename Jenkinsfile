@@ -35,6 +35,10 @@ pipeline {
                     test -f build/index.html || (echo "Build failed, index.html not found!" && exit 1)
                     cd build
                     npm test
+                    mkdir jest-results
+                    cp -r jest/junit.xml jest-results/
+                    echo "Tests completed successfully, results stored in jest-results directory."
+                    ls -lrt jest-results
                 '''
             }
         }
@@ -50,7 +54,8 @@ pipeline {
                 sh '''
                     echo "Running E2E tests..."
                     npm install serve
-                    node_modules/.bin/serve -s build
+                    node_modules/.bin/serve -s build &
+                    sleep 10
                     npm playwright test
                 '''
             }
@@ -60,9 +65,9 @@ pipeline {
     post {
         always {
         sh '''
-            ls -lrt test-results
+            ls -lrt jest-results
         '''
-           junit 'test-results/junit.xml'
+           junit 'jest-results/junit.xml'
         }
     }
 }
