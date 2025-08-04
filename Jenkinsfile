@@ -8,8 +8,14 @@ pipeline {
             }
             steps {
                 sh '''
+                    ls -la
+                    echo "checking node and npm versions..."
+                    node --version
+                    npm --version
+
+
                     echo "Building the project..."
-                    npm install
+                    npm ci
                     npm run build
                 '''
             }
