@@ -36,6 +36,7 @@ pipeline {
                     cd build
                     npm test
                     cd ..
+                    rm -rf jest-results
                     mkdir jest-results
                     cp -r test-results/junit.xml jest-results/
                     echo "Tests completed successfully, results stored in jest-results directory."
