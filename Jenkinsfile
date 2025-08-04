@@ -42,7 +42,10 @@ pipeline {
 
     post {
         always {
-           junit 'build/test-results/junit.xml'
+        sh '''
+            ls -lrt test-results
+        '''
+           junit 'test-results/junit.xml'
         }
     }
 }
