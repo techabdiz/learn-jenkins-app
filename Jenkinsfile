@@ -84,7 +84,7 @@ pipeline {
                     node_modules/.bin/netlify --version
                     node_modules/.bin/netlify status
                     echo "Deploying to Netlify...: ${NETLIFY_SITE_ID}"
-                    node_modules/.bin/netlify deploy --prod --dir build
+                    node_modules/.bin/netlify deploy --prod --dir=build
                     echo "Deployment completed successfully."
                     node_modules/.bin/netlify status
                     echo "Deployment URL: https://${NETLIFY_SITE_ID}.netlify.app"
