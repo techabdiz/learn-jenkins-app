@@ -90,6 +90,26 @@ pipeline {
                     echo "Deployment URL: https://${NETLIFY_SITE_ID}.netlify.app"
                 '''
             }
+
+            stage('Prod E2E Tests') { 
+                agent {
+                    docker {
+                        image 'node:18-alpine'
+                        reuseNode true
+                    }
+                }
+
+                environment {
+                    CI_ENVIRONMENT_URL = 'https://aesthetic-klepon-0edbea.netlify.app/'
+                }
+
+                steps { 
+                    sh '''
+                        echo "Running E2E tests against production..."
+                        npx playwright test --reporter=html 
+                    '''
+                }
+            }
         }
 
         
