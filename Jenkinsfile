@@ -100,7 +100,7 @@ pipeline {
             }
 
             environment {
-                CI_ENVIRONMENT_URL = 'https://aesthetic-klepon-0edbea.netlify.app/'
+                CI_ENVIRONMENT_URL = 'https://aesthetic-klepon-0edbea.netlify.app'
             }
 
             steps { 
