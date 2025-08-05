@@ -23,45 +23,51 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
+        stage ('All Tests') {
+            parallel {
+                stage('Test') {
+                    agent {
+                        docker {
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        sh '''
+                            test -f build/index.html || (echo "Build failed, index.html not found!" && exit 1)
+                            cd build
+                            npm test
+                            cd ..
+                            rm -rf jest-results
+                            mkdir jest-results
+                            cp -r test-results/junit.xml jest-results/
+                            echo "Tests completed successfully, results stored in jest-results directory."
+                            ls -lrt jest-results
+                        '''
+                    }
                 }
-            }
-            steps {
-                sh '''
-                    test -f build/index.html || (echo "Build failed, index.html not found!" && exit 1)
-                    cd build
-                    npm test
-                    cd ..
-                    rm -rf jest-results
-                    mkdir jest-results
-                    cp -r test-results/junit.xml jest-results/
-                    echo "Tests completed successfully, results stored in jest-results directory."
-                    ls -lrt jest-results
-                '''
+
+                stage('E2E Tests') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        sh '''
+                            echo "Running E2E tests..."
+                            npm install serve
+                            node_modules/.bin/serve -s build &
+                            sleep 10
+                            npx playwright test --reporter=html 
+                        '''
+                    }
+                }
             }
         }
 
-        stage('E2E Tests') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    echo "Running E2E tests..."
-                    npm install serve
-                    node_modules/.bin/serve -s build &
-                    sleep 10
-                    npx playwright test --reporter=html 
-                '''
-            }
-        }
+        
     }
 
     post {
