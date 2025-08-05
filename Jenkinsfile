@@ -58,10 +58,7 @@ pipeline {
                     npm install serve
                     node_modules/.bin/serve -s build &
                     sleep 10
-                    npx playwright test --reporter=html --output=jest-results
-                    echo "E2E tests completed successfully, results stored in jest-results directory."
-                    ls -lrt jest-results
-                    cp -r jest-results/* test-results/
+                    npx playwright test --reporter=html 
                 '''
             }
         }
