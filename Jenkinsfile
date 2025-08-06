@@ -114,6 +114,7 @@ pipeline {
 
             steps { 
                 sh '''
+                    echo "testing staging environment: ${CI_ENVIRONMENT_URL}"
                     echo "Running E2E tests against staging..."
                     npx playwright test --reporter=html 
                 '''
