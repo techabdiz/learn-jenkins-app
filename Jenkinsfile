@@ -91,6 +91,10 @@ pipeline {
                     echo "Deploying to Netlify Staging...: ${NETLIFY_SITE_ID}"
                     node_modules/.bin/netlify deploy --dir=build
                 '''
+
+                timeout(2) {
+                    input cancel: 'Reject', id: 'Deploy-approval', message: 'ready to deploy ?', ok: 'Approve'
+                }
             }
         }
         stage ('Deploy') {
